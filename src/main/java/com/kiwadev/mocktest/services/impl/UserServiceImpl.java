@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         var user = repository.findById(id);
-        if(user.isEmpty()) throw new RuntimeException("User id : " +id+" not found.");
+        if (user.isEmpty()) throw new RuntimeException("User id : " + id + " not found.");
         return user.get();
     }
 

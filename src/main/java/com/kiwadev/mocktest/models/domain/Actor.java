@@ -1,6 +1,9 @@
 package com.kiwadev.mocktest.models.domain;
 
 
+import com.kiwadev.mocktest.models.web.ActorRequestDTO;
+import com.kiwadev.mocktest.models.web.ActorResponseDTO;
+import com.kiwadev.mocktest.models.web.MovieResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,4 +23,10 @@ public class Actor implements Serializable {
     @Column(name = "actor_id")
     private Long actorId;
     private String name;
+
+    public ActorResponseDTO toResponse(){
+        return ActorResponseDTO.builder()
+                .name(name)
+                .build();
+    }
 }

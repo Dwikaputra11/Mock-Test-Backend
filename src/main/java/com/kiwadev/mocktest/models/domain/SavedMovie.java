@@ -1,14 +1,14 @@
 package com.kiwadev.mocktest.models.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "saved_movie", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class SavedMovie {
 
     @EmbeddedId

@@ -1,6 +1,7 @@
 package com.kiwadev.mocktest.models.domain;
 
 
+import com.kiwadev.mocktest.models.web.CountryResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,4 +21,10 @@ public class Country implements Serializable {
     private String countryCode;
     private String name;
 
+    public CountryResponseDTO toResponse(){
+        return CountryResponseDTO.builder()
+                .countryCode(countryCode)
+                .name(name)
+                .build();
+    }
 }

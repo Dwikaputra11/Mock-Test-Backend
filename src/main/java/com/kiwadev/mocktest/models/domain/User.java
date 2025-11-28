@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "user", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Builder
 @Getter
 @Setter

@@ -1,14 +1,15 @@
 package com.kiwadev.mocktest.models.domain;
 
+import com.kiwadev.mocktest.models.web.CastResponseDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "cast", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Cast {
 
     @EmbeddedId
@@ -23,4 +24,12 @@ public class Cast {
     @MapsId("actorId")
     @JoinColumn(name = "actor_id")
     private Actor actor;
+
+    public CastResponseDTO toResponse()  {
+        return CastResponseDTO.builder()
+                .movieId(movie.getMovieId())
+                .actorId(actor.getActorId())
+                .actorName(actor.getName())
+                .build();
+    }
 }

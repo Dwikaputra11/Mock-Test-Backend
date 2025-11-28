@@ -1,14 +1,15 @@
 package com.kiwadev.mocktest.models.domain;
 
+import com.kiwadev.mocktest.models.web.MovieAvailabilityResponseDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "movie_availability", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class MovieAvailability {
 
     @EmbeddedId
@@ -23,4 +24,14 @@ public class MovieAvailability {
     @MapsId("countryCode")
     @JoinColumn(name = "country_code")
     private Country country;
+
+
+    public MovieAvailabilityResponseDTO toResponse(){
+        return MovieAvailabilityResponseDTO.builder()
+                .movieId(movie.getMovieId())
+                .movieName(movie.getTitle())
+                .countryCode(country.getCountryCode())
+                .countryName(country.getName())
+                .build();
+    }
 }

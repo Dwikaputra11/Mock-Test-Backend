@@ -10,9 +10,20 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface MovieService {
-    List<MovieResponseDTO> findAll(Pageable pageable);
-    MovieResponseDTO findById(Long id);
+
     MovieResponseDTO save(MovieRequestDTO movie);
-    MovieResponseDTO update(Long id, MovieRequestDTO movie);
-    void delete(Long id);
+
+    MovieResponseDTO update(Long movieId, MovieRequestDTO dto);
+
+    void delete(Long movieId);
+
+    MovieResponseDTO findById(Long movieId);
+
+    Page<MovieResponseDTO> findAll(Pageable pageable);
+
+    // include related tables
+    List<CastResponseDTO> getMovieCast(Long movieId);
+    List<MovieAvailabilityResponseDTO> getAvailability(Long movieId);
+    List<MovieResponseDTO> getSavedMovie(Long userId);
+    List<MovieAvailabilityResponseDTO> getAvailability(String movieCode);
 }
