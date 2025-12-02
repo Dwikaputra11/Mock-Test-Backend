@@ -1,24 +1,19 @@
 package com.kiwadev.mocktest.models.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.kiwadev.mocktest.models.web.AuthResponseDTO;
 import com.kiwadev.mocktest.models.web.MovieResponseDTO;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "movie", schema = "public")
+@Table(name = "movie", schema = "mock_test")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-@ToString
 public class Movie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +31,7 @@ public class Movie implements Serializable {
 
     public MovieResponseDTO toMovieResponse(){
         return MovieResponseDTO.builder()
+                .movieId(movieId)
                 .title(title)
                 .year(year)
                 .genreName(genre.getName())

@@ -1,0 +1,7 @@
+[
+  { "countryCode": "US", "name": "United States" },
+  { "countryCode": "ID", "name": "Indonesia" },
+  { "countryCode": "JP", "name": "Japan" },
+  { "countryCode": "KR", "name": "South Korea" },
+  { "countryCode": "GB", "name": "United Kingdom" }
+]

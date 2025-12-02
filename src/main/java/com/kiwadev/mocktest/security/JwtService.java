@@ -23,7 +23,7 @@ public class JwtService {
     private final ApplicationProperties appProperties;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
-    public String extractEmail(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -50,7 +50,7 @@ public class JwtService {
             if(isTokenExpired(token))
                 throw new RuntimeException("Token was already expired");
 
-            final String username = extractEmail(token);
+            final String username = extractUsername(token);
 
             if(!username.equals(userDetails.getUsername()))
                 throw new RuntimeException("Invalid username");
@@ -110,4 +110,5 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(appProperties.getJwtSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 }

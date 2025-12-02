@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SavedMovieRepository extends JpaRepository<SavedMovie, SavedMovieId> {
     @EntityGraph(attributePaths = {"movie", "movie.genre"})
     List<SavedMovie> findByMovie_MovieId(Long movieId);
     @EntityGraph(attributePaths = {"movie", "movie.genre"})
     List<SavedMovie> findByUser_UserId(Long userId);
+    boolean existsByUser_UserIdAndMovie_MovieId(Long userId, Long movieId);
+    Optional<SavedMovie> findByUser_UserIdAndMovie_MovieId(Long userId, Long movieId);
 }

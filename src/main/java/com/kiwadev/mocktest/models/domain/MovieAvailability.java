@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "movie_availability", schema = "public")
+@Table(name = "movie_availability", schema = "mock_test")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

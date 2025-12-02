@@ -16,17 +16,33 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+#  data:
+#    web:
+#      pageable:
+#        default-page-size: 20
+#        one-indexed-parameters: true
+#        page-parameter: page
+
+
 server:
   port: 8081
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+
+
 
 
 mocktest:
   config:
     jwt-secret-key: 5970337336763979244226452948404D635166546A576E5A7234743777217A25
-    jwt-refresh-expiration-ms: 86400000
+    jwt-access-expiration-ms: 86400000
+    jwt-refresh-expiration-ms: 604800000

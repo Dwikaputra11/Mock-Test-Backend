@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "cast", schema = "public")
+@Table(name = "cast", schema = "mock_test")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

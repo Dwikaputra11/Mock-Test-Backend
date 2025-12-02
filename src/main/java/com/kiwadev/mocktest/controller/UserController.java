@@ -2,9 +2,7 @@ package com.kiwadev.mocktest.controller;
 
 import com.kiwadev.mocktest.helper.Constant;
 import com.kiwadev.mocktest.helper.ResponseHandler;
-import com.kiwadev.mocktest.models.web.AuthRequestDTO;
-import com.kiwadev.mocktest.models.web.RegisterRequestDTO;
-import com.kiwadev.mocktest.models.web.UpdateUserRequestDTO;
+import com.kiwadev.mocktest.models.web.*;
 import com.kiwadev.mocktest.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,20 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService service;
 
 
-    @GetMapping("/all")
-    public ResponseEntity<Object> profile(){
-        return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, service.findAll());
-    }
-
-
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticate(
+    public ResponseEntity<Object> login(
             @RequestBody AuthRequestDTO request,
             HttpServletResponse response
     ){
@@ -36,7 +28,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO request, HttpServletResponse response){
-        return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, service.save(request));
+        return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, service.register(request, response));
     }
 
     @GetMapping("/profile/{id}")
@@ -51,7 +43,7 @@ public class UserController {
     public ResponseEntity<Object> profile(
             HttpServletRequest request,
             @PathVariable("id") Long id,
-            @RequestBody UpdateUserRequestDTO user
+            @RequestBody UserRequestDTO user
             ){
         return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, service.update(id, user));
     }
@@ -63,5 +55,21 @@ public class UserController {
     ) {
         service.delete(id);
         return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK,id);
+    }
+
+    @GetMapping("/movies")
+    public ResponseEntity<Object> userMovies(
+            HttpServletRequest request
+    ){
+        return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, service.allMovies(request));
+    }
+
+    @DeleteMapping("/movies/{movieId}")
+    public ResponseEntity<Object> deleteMovie(
+            HttpServletRequest request,
+            @PathVariable("movieId") Long id
+    ){
+        service.deleteMovie(request, id);
+        return ResponseHandler.generateResponse(Constant.SUCCESS_RETRIEVE_MSG, HttpStatus.OK, null);
     }
 }

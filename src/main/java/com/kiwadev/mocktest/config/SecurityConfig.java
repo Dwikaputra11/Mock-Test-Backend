@@ -1,17 +1,26 @@
 package com.kiwadev.mocktest.config;
 
+import com.kiwadev.mocktest.security.RestSecurityFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final RestSecurityFilter    authFilter;
+    private final AuthenticationManager authProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -19,17 +28,18 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
-                        .requestMatchers("/api/v1/user/login", "/api/v1/user/register")
-                        .permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/movies/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/movies/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/movies/**").authenticated()
+                        .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                        .anyRequest().permitAll()
                 )
-                .httpBasic(AbstractHttpConfigurer::disable)   // <-- FIXED
-                .formLogin(AbstractHttpConfigurer::disable);            // <-- FIXED
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager(authProvider)
+        ;
 
         return http.build();
     }

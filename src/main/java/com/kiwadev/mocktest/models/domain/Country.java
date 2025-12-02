@@ -8,7 +8,7 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "country", schema = "public")
+@Table(name = "country", schema = "mock_test")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

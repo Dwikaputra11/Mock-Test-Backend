@@ -1,5 +1,6 @@
 package com.kiwadev.mocktest.helper;
 
+import com.kiwadev.mocktest.exception.ErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ public record ResponseHandler() {
     public static final String STATUS = "status";
     public static final String MESSAGE = "message";
     public static final String DATA = "data";
-    public static final String TOTAL_RECORDS = "totalRecords";
+    public static final String TOTAL_RECORDS = "total";
+    public static final String PAGE = "page";
+    public static final String PAGE_SIZE = "page_size";
 
 
-    public static ResponseEntity<Object> generateExceptionResponse(String message, HttpStatus status, String uri) {
+    public static ResponseEntity<Object> generateExceptionResponseOld(String message, HttpStatus status, String uri) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put(MESSAGE, message);
         map.put(STATUS, status.value());
@@ -26,6 +29,7 @@ public record ResponseHandler() {
 
         return new ResponseEntity<>(map, status);
     }
+
     public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObj) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put(MESSAGE, message);
@@ -33,14 +37,20 @@ public record ResponseHandler() {
 
         if(responseObj == null){
             map.put(DATA, null);
+            map.put(PAGE, 0);
+            map.put(PAGE_SIZE, 0);
             map.put(TOTAL_RECORDS, 0);
         } else if(responseObj instanceof List<?> list){
-            map.put(TOTAL_RECORDS, list.size());
             map.put(DATA, responseObj);
+            map.put(PAGE, 0);
+            map.put(PAGE_SIZE, 0);
+            map.put(TOTAL_RECORDS, list.size());
         }else {
             var list = new ArrayList<>();
             list.add(responseObj);
             map.put(DATA, list);
+            map.put(PAGE, 0);
+            map.put(PAGE_SIZE, 0);
             map.put(TOTAL_RECORDS, list.size());
         }
 
@@ -54,17 +64,29 @@ public record ResponseHandler() {
 
         if(responseObj == null){
             map.put(DATA, null);
+            map.put(PAGE, 0);
+            map.put(PAGE_SIZE, 0);
             map.put(TOTAL_RECORDS, 0);
-            map.put("pageNumber", 0);
-            map.put("pageSize", 0);
         } else {
-            map.put(TOTAL_RECORDS, responseObj.getTotalElements());
-            map.put("pageNumber", responseObj.getNumber());
-            map.put("pageSize", responseObj.getSize());
             map.put(DATA, responseObj.getContent());
+            map.put(PAGE, responseObj.getNumber() + 1);
+            map.put(PAGE_SIZE, responseObj.getSize());
+            map.put(TOTAL_RECORDS, responseObj.getTotalElements());
         }
 
 
         return new ResponseEntity<>(map, status);
+    }
+
+    public static ResponseEntity<Object> generateExceptionResponse(ErrorCode code, String message, Object details, HttpStatus status) {
+        ErrorResponse response = ErrorResponse.builder()
+                .error(ErrorResponse.ErrorData.builder()
+                        .code(code)
+                        .message(message)
+                        .details(details)
+                        .build())
+                .build();
+
+        return ResponseEntity.status(status).body(response);
     }
 }

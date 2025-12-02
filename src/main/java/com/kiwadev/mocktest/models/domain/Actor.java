@@ -10,7 +10,7 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "actor", schema = "public")
+@Table(name = "actor", schema = "mock_test")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

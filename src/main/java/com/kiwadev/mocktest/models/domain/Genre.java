@@ -1,5 +1,6 @@
 package com.kiwadev.mocktest.models.domain;
 
+import com.kiwadev.mocktest.models.web.GenreResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "genre", schema = "public")
+@Table(name = "genre", schema = "mock_test")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -23,4 +24,11 @@ public class Genre implements Serializable {
 
     @OneToMany(mappedBy = "genre")
     private List<Movie> movies;
+
+    public GenreResponseDTO toResponse() {
+        return GenreResponseDTO.builder()
+                .id(genreId)
+                .name(name)
+                .build();
+    }
 }

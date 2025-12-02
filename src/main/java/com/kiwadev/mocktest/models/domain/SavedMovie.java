@@ -3,12 +3,16 @@ package com.kiwadev.mocktest.models.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
-@Table(name = "saved_movie", schema = "public")
+@Table(name = "saved_movie", schema = "mock_test")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class SavedMovie {
 
     @EmbeddedId
@@ -24,5 +28,5 @@ public class SavedMovie {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    private Long dateCreated;
+    private LocalDate dateCreated;
 }

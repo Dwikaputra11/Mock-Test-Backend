@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Configuration
-@ConfigurationProperties(prefix = "flypal.config")
+@ConfigurationProperties(prefix = "mocktest.config")
 public class ApplicationProperties {
     private String jwtSecretKey;
     private int jwtAccessExpirationMs;

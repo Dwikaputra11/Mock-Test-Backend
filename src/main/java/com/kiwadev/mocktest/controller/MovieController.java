@@ -5,9 +5,13 @@ import com.kiwadev.mocktest.helper.ResponseHandler;
 import com.kiwadev.mocktest.models.web.*;
 import com.kiwadev.mocktest.services.CastService;
 import com.kiwadev.mocktest.services.MovieService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +21,66 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/movies")
 @RequiredArgsConstructor
+@Slf4j
 public class MovieController {
 
     private final MovieService movieService;
     private final CastService castService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findById(@PathVariable Long id) {
+        return ResponseHandler.generateResponse(
+                Constant.SUCCESS_RETRIEVE_MSG,
+                HttpStatus.OK,
+                movieService.findById(id)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> findAll(
+            @RequestParam String country,
+            @RequestParam(required = false) Long genre,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int page_size,
+            @RequestParam(required = false, defaultValue = "-year") String sort
+    ) {
+        Sort s = sort.startsWith("-") ?
+                Sort.by(sort.substring(1)).descending()
+                : Sort.by(sort).ascending();
+
+        Pageable pageable = PageRequest.of(page - 1, page_size, s);
+
+        return ResponseHandler.generatePagingResponse(
+                Constant.SUCCESS_RETRIEVE_MSG,
+                HttpStatus.OK,
+                movieService.findAll(country, genre, pageable)
+        );
+    }
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody MovieRequestDTO dto) {
         return ResponseHandler.generateResponse(
                 Constant.SUCCESS_EDIT_MSG,
                 HttpStatus.CREATED,
-                movieService.save(dto)
+                movieService.create(dto)
+        );
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<Object> save(HttpServletRequest request, @RequestBody SavedMovieRequestDTO dto) {
+        return ResponseHandler.generateResponse(
+                Constant.SUCCESS_EDIT_MSG,
+                HttpStatus.CREATED,
+                movieService.save(request,dto)
+        );
+    }
+
+    @DeleteMapping("/save")
+    public ResponseEntity<Object> deleteByUser() {
+        return ResponseHandler.generateResponse(
+                Constant.SUCCESS_EDIT_MSG,
+                HttpStatus.OK,
+                null
         );
     }
 
@@ -48,24 +101,6 @@ public class MovieController {
                 Constant.SUCCESS_EDIT_MSG,
                 HttpStatus.OK,
                 null
-        );
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOne(@PathVariable Long id) {
-        return ResponseHandler.generateResponse(
-                Constant.SUCCESS_RETRIEVE_MSG,
-                HttpStatus.OK,
-                movieService.findById(id)
-        );
-    }
-
-    @GetMapping
-    public ResponseEntity<Object> getAll(Pageable pageable) {
-        return ResponseHandler.generateResponse(
-                Constant.SUCCESS_RETRIEVE_MSG,
-                HttpStatus.OK,
-                movieService.findAll(pageable)
         );
     }
 
